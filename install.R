@@ -23,5 +23,7 @@ install.packages(c('shiny',
 "stringr",
 "data.table",
 "GGally",
-"rhandsontable"))
+"rhandsontable",
+"reshape2",
+"quantreg"))
 

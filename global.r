@@ -143,11 +143,6 @@ meltData <- function(x, dataSelector) {
   xMelted <- xMelted %>% plyr::arrange(xMelted[[dataSelector]])
   return(xMelted)
 }
-
-countAndAvg <- function(x, countColumn) {
-  
-}
-
 #################################################################################################
 # ___   ___ ___   ___    _____       _           _      _____                 _   _             #
 #|__ \ / _ \__ \ / _ \  |  __ \     | |         | |    / ____|               | | (_)            #

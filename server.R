@@ -122,24 +122,11 @@ shinyServer(function(input, output, session) {
         try(graphData4388 <- meltData(graphData4388, dataTypes4388))
         
         #this creates the climb data for both the single team metrics and dashboard pages
-        #try(climbData <-
-        #  displayData2 %>% select(Climb , Match.. , Team..))
-        #try(climbData4388 <-
-        #  displayData4388 %>% select(Climb, Match.., Team..))
-		    #print(climbData4388)
-		    
-        #Melts the data sets for final display
-        #try(climbData <- meltData(climbData, "Climb"))
-        #try(climbData$Avg <- mean(as.integer(climbData$Climb)))
-        #try(climbData4388 <- meltData(climbData4388, "Climb"))
-		    #print("1")
-		    #print(climbData4388)
-        #try(climbData4388$Avg <- mean(as.integer(climbData4388$Climb)))
-        #print(climbData4388)
-		    try(climbData <- allTeamsAVG[allTeamsAVG$Team.. == displayData2, 14])
-        try(climbData4388 <- allTeamsAVG[allTeamsAVG$Team.. == displayData4388, 14])
-        print(climbData)
-        print(climbData4388)
+        
+		    try(climbData <- allTeamsAVG[allTeamsAVG$Team.. == displayData2, ])
+        try(climbData <- climbData$Climb)
+        try(climbData4388 <- allTeamsAVG[allTeamsAVG$Team.. == 4388, ])
+        try(climbData4388 <- climbData4388$Climb)
 		
         #filters the data to be displayed in a rHandsonTable on single team metrics page
         try(qualitiaveOut <-
@@ -309,7 +296,7 @@ shinyServer(function(input, output, session) {
           #filters based on input var for both allTeams data and for allTeamsAVG data
           
           teamSelectedData <- allTeams2[allTeams2$Team.. %in% teamsSelected, ]
-          allTeamsAVGSelected <- allTeamsAVG[teamsSelected %in% allTeamsAVG$Team.., ]
+          allTeamsAVGSelected <- allTeamsAVG[allTeamsAVG$Team.. %in% teamsSelected, ]
           
           #outputs the parallel coordianate chart
           output$testParallel <- renderPlotly({
