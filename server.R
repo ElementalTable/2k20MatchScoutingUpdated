@@ -123,7 +123,7 @@ shinyServer(function(input, output, session) {
         
         #this creates the climb data for both the single team metrics and dashboard pages
         
-		    try(climbData <- allTeamsAVG[allTeamsAVG$Team.. == displayData2, ])
+		    try(climbData <- allTeamsAVG[allTeamsAVG$Team.. == displayData2$Team.., ])
         try(climbData <- climbData$Climb)
         try(climbData4388 <- allTeamsAVG[allTeamsAVG$Team.. == 4388, ])
         try(climbData4388 <- climbData4388$Climb)
