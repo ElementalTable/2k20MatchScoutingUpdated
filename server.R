@@ -76,6 +76,29 @@ shinyServer(function(input, output, session) {
         try(allData <-
           allData %>% plyr::arrange(`Team..`, `Match..`))
         
+        #creates a mean for each of the data points in the allTeams data set
+        try(allTeamsAVG <- ddply(
+          allData,
+          .(Team..),
+          summarize,
+          Red.Card = mean(replace_na(as.logical(Red.Card), FALSE), na.rm = FALSE),
+          Yellow.Card = mean(replace_na(as.logical(Yellow.Card), FALSE), na.rm = TRUE),
+          Fouls = mean((Fouls), na.rm = TRUE),
+          Tech.Fouls = mean((Tech.Fouls), na.rm = TRUE),
+          Disabled = mean(replace_na(as.logical(Disabled), FALSE), na.rm = TRUE),
+          Flipped.Over = mean(replace_na(as.logical(Flipped.Over), FALSE), na.rm = TRUE),
+          Inner.Port = mean(Inner.Port, na.rm = TRUE),
+          Outer.Port = mean(Outer.Port, na.rm = TRUE),
+          Lower.Port = mean(Lower.Port, na.rm = TRUE),
+          Assisted.Climb = mean(replace_na(as.logical(Assisted.Climb), FALSE), na.rm = TRUE),
+          Center.Climb = mean(replace_na(as.logical(Center.Climb), FALSE), na.rm = TRUE),
+          Leveling.Climb = mean(replace_na(as.logical(Leveling.Climb), FALSE), na.rm = TRUE),
+          Climb = mean(replace_na(as.logical(Climb), FALSE), na.rm = TRUE),
+          Trench.Run = mean(replace_na(as.logical(Trench.Run), FALSE), na.rm = TRUE),
+          Control.Panel = mean(Control.Panel, na.rm = TRUE),
+          number = length(Team..)
+        )) 
+        
         #print(allData)
         
         #This is where the input functions are called and assigns them to a global var
@@ -99,18 +122,24 @@ shinyServer(function(input, output, session) {
         try(graphData4388 <- meltData(graphData4388, dataTypes4388))
         
         #this creates the climb data for both the single team metrics and dashboard pages
-        try(climbData <-
-          displayData2 %>% select(Climb , Match.. , Team..))
-        try(climbData4388 <-
-          displayData4388 %>% select(Climb, Match.., Team..))
-		
+        #try(climbData <-
+        #  displayData2 %>% select(Climb , Match.. , Team..))
+        #try(climbData4388 <-
+        #  displayData4388 %>% select(Climb, Match.., Team..))
+		    #print(climbData4388)
+		    
         #Melts the data sets for final display
-        try(climbData <- meltData(climbData, "Climb"))
-        try(climbData$Avg <- mean(as.integer(climbData$Climb)))
-        try(climbData4388 <- meltData(climbData4388, "Climb"))
-        try(climbData4388$Avg <- mean(as.integer(climbData4388$Climb)))
+        #try(climbData <- meltData(climbData, "Climb"))
+        #try(climbData$Avg <- mean(as.integer(climbData$Climb)))
+        #try(climbData4388 <- meltData(climbData4388, "Climb"))
+		    #print("1")
+		    #print(climbData4388)
+        #try(climbData4388$Avg <- mean(as.integer(climbData4388$Climb)))
+        #print(climbData4388)
+		    try(climbData <- allTeamsAVG[allTeamsAVG$Team.. == displayData2, 14])
+        try(climbData4388 <- allTeamsAVG[allTeamsAVG$Team.. == displayData4388, 14])
         print(climbData)
-		cat(file=stderr(), paste0(climbData4388, "\n"))
+        print(climbData4388)
 		
         #filters the data to be displayed in a rHandsonTable on single team metrics page
         try(qualitiaveOut <-
@@ -181,7 +210,7 @@ shinyServer(function(input, output, session) {
           layout(
             plot_ly(
               domain = list(x = c(0 , 1), y = c(0, 1)),
-              value = climbData$Avg,
+              value = climbData,
               title = list(text = "Climb Probability"),
               type = "indicator",
               mode = "gauge+number",
@@ -204,7 +233,7 @@ shinyServer(function(input, output, session) {
           layout(
             plot_ly(
               domain = list(x = c(0 , 1), y = c(0, 1)),
-              value = climbData4388$Avg,
+              value = climbData4388,
               title = list(text = "Climb Probability"),
               type = "indicator",
               mode = "gauge+number",
@@ -269,31 +298,6 @@ shinyServer(function(input, output, session) {
           Control.Panel = mean(Control.Panel, na.rm = TRUE),
           number = length(Team..)
         ))
-        
-
-        
-        #creates a mean for each of the data points in the allTeams data set
-        try(allTeamsAVG <- ddply(
-          allData,
-          .(Team..),
-          summarize,
-          Red.Card = mean(replace_na(as.logical(Red.Card), FALSE), na.rm = FALSE),
-          Yellow.Card = mean(replace_na(as.logical(Yellow.Card), FALSE), na.rm = TRUE),
-          Fouls = mean((Fouls), na.rm = TRUE),
-          Tech.Fouls = mean((Tech.Fouls), na.rm = TRUE),
-          Disabled = mean(replace_na(as.logical(Disabled), FALSE), na.rm = TRUE),
-          Flipped.Over = mean(replace_na(as.logical(Flipped.Over), FALSE), na.rm = TRUE),
-          Inner.Port = mean(Inner.Port, na.rm = TRUE),
-          Outer.Port = mean(Outer.Port, na.rm = TRUE),
-          Lower.Port = mean(Lower.Port, na.rm = TRUE),
-          Assisted.Climb = mean(replace_na(as.logical(Assisted.Climb), FALSE), na.rm = TRUE),
-          Center.Climb = mean(replace_na(as.logical(Center.Climb), FALSE), na.rm = TRUE),
-          Leveling.Climb = mean(replace_na(as.logical(Leveling.Climb), FALSE), na.rm = TRUE),
-          Climb = mean(replace_na(as.logical(Climb), FALSE), na.rm = TRUE),
-          Trench.Run = mean(replace_na(as.logical(Trench.Run), FALSE), na.rm = TRUE),
-          Control.Panel = mean(Control.Panel, na.rm = TRUE),
-          number = length(Team..)
-        )) 
 
         
         #Observes the team slicer on the side bar to allow for filtering of data on the

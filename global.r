@@ -121,8 +121,7 @@ listOfTeams <-
 #Gets only unique values
 listOfTeams <- listOfTeams %>%
   distinct()
- 
- vec <- paste0(unlist(listOfTeams), collapse = "\n")
+
 #meltData Function, melts datatables for display in a scatter chart by useing teams as index
 #' meltData
 #'
@@ -135,8 +134,6 @@ listOfTeams <- listOfTeams %>%
 #' @examples :graphData <- meltData(graphData, dataTypes2)
 
 meltData <- function(x, dataSelector) {
-  nulls <- vector("list", length(x))
-  x <- replace_na(x, nulls)
   x <- split(x, as.factor(x[["Team.."]]), drop = FALSE)
   xMelted <-
     reshape2::melt(x, id.var = "Match..", value.name = dataSelector)
@@ -145,6 +142,10 @@ meltData <- function(x, dataSelector) {
         as.integer(xMelted[[dataSelector]]))
   xMelted <- xMelted %>% plyr::arrange(xMelted[[dataSelector]])
   return(xMelted)
+}
+
+countAndAvg <- function(x, countColumn) {
+  
 }
 
 #################################################################################################
